@@ -62,6 +62,10 @@ if($rowcount){
           return $query->num_rows();
 		  
      }
+	   function insertArticle($data)
+    {
+        return $this->db->insert('article', $data);
+    }
 	
 }
 

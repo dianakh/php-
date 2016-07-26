@@ -17,7 +17,7 @@
 <!-- Latest compiled JavaScript -->
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
-<body ">
+<body >
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 <div class="row"> 
 <nav class="navbar navbar-default  navbar-inverse" style="background-color:#7C4546;">
@@ -70,7 +70,8 @@
             <li><a href="# "id="two" >Interior Engineers</a></li>
           
 		   
-          </ul>        
+          </ul>   
+                   <li ><a href="<?php echo site_url('user/addArticle') ;?>">Add Article</a></li>		  
                     </li>
 					           
                     </li>

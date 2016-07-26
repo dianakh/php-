@@ -169,7 +169,7 @@ required: true,
 
 </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> User Registration Form</title>
+    <title> User Registration Form </title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body >

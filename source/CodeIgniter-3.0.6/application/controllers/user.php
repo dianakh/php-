@@ -387,17 +387,96 @@ if (!empty($_FILES['file']['name'])) {
    echo $row->phone;
    echo "||";
    echo $passwordError;
-       echo "||";
+   echo "||";
    echo $passwordError1;
-         echo "||";
+   echo "||";
    echo $row->image_name;
-         echo "||";
+   echo "||";
    echo $imageError;
 
      
-                            }
-}
-	}
+                          }
+              }
+	      }
+		  
+		public function addArticle() { 
+
+		
+		$this->load->view('addArticle');
  
-}
+       }
 	   
+	   public function addArticle_DB() { 
+	   	
+        //set validation rules
+        $this->form_validation->set_rules('title', 'Title', 'trim|required|min_length[6]|max_length[15]|xss_clean');
+        $this->form_validation->set_rules('content', 'Content', 'trim|required|min_length[10]|max_length[200]');
+		 $this->form_validation->set_rules('author', 'Author', 'trim|required|min_length[3]');
+		
+        //validate form input
+        if ($this->form_validation->run() == FALSE)
+        {
+			
+            // fails
+            $this->load->view('addArticle');
+        }
+    	
+    
+    else{
+		  
+   extract($_POST);
+    $error=array();
+    $extension=array("jpeg","jpg","png","gif");
+	$total = count($_FILES['upload']['name']);
+
+  // Count # of uploaded files in array
+// Loop through each file
+for($i=0; $i<$total; $i++) {
+  //Get the temp file path
+  $tmpFilePath = $_FILES['upload']['tmp_name'][$i];
+
+  //Make sure we have a filepath
+  
+    //Setup our new file path
+    $newFilePath = './uploads/'. $_FILES['upload']['name'][$i];
+
+    //Upload the file into the temp dir
+    if(move_uploaded_file($tmpFilePath, $newFilePath)) {
+	
+	 $data = array(
+                'images' => $_FILES['upload']['name'][$i],
+	'id' =>$_SESSION['id']
+	);
+			
+		 $this->db->insert('image', $data);
+			  
+    
+
+    }
+  
+}
+            $data = array(
+			'Title'=> $this->input->post('title'),
+			'Body'=> $this->input->post('content'),
+			'Author'=> $this->input->post('author'),
+			'id'=>$_SESSION['id']
+				
+			
+            );
+            
+            // insert form data into database
+            if ($this->user_model->insertArticle($data))
+            {
+
+
+	   $this->load->view('home');
+			}
+		
+		
+	   
+	   }
+	   }
+	   
+	   //view articles in home page
+	   public function viewArticle() { }
+}
