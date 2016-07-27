@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse" id="collapse">
                 <ul class="nav navbar-nav">
 				       <li ><a href="<?php echo site_url('user/home') ;?>">Home</a></li>
-                      <li ><a href="<?php echo site_url('user/viewArticle') ;?>">View Article</a></li>
+                     
 
                      
                 </ul> 

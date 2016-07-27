@@ -68,18 +68,17 @@
                        <ul class="dropdown-menu color:#EFE9E9; " >
             <li><a href="#" id="one" >Architecture Engineers</a></li>
             <li><a href="# "id="two" >Interior Engineers</a></li>
-		
-          
-		   
-          </ul>   
-                   <li ><a href="<?php echo site_url('user/addArticle') ;?>">Add Article</a></li>		  
-                    </li>
-					           
+          </ul>  
+           </li>		  
+		     <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#" >  Article  <span class="caret"></span></a>  
+                       <ul class="dropdown-menu color:#EFE9E9; " >
+                   <li ><a href="<?php echo site_url('user/addArticle') ;?>">Add Article</a></li>		         
                     <li ><a href="<?php echo site_url('user/viewArticle') ;?>">View Article</a></li>
 					 <li ><a href="<?php echo site_url('user/viewMyArticle') ;?>">View My Article</a></li>
-                
+                 <li ><a href="<?php echo site_url('user/deleteMyArticle') ;?>">Delete My Article</a></li>
                    
-                    
+                         </ul>  
+                         </li>	 
                     
                 </ul> 
   </div>

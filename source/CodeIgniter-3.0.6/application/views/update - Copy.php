@@ -54,7 +54,12 @@
 		 
   <?php foreach($resultq1 as $row):?>
   
-      <h4>Author: <?php echo $row['Author'];?> </h4>
+     
+	  <div>
+<h4 id="d1">Author:
+<input type="text"  id="duser" name="Author" value="<?php echo $row['Author'];?> "  >
+</h4>
+</div>
 	  <h4> <?php echo $row['Title'];?> </h4>	
 	<?php    
 	
@@ -70,16 +75,14 @@
 		  endforeach;
 		 
 		 ?>
-		 <div>
 	 <h4><?php echo $row['Body']; ?> </h4>
-	  </div>
+	  
 		<br><br>
-		<pre></pre>
 		
-	  	  
+		<pre></pre>
+	  	   </div>
 					  
                    
  <?php endforeach;?>
-  </div>
     </body>
 </html>

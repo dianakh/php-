@@ -402,7 +402,12 @@ if (!empty($_FILES['file']['name'])) {
 		  
 		public function addArticle() { 
 
-		
+			if(!isset($_SESSION['id'])){
+    # redirect to the login page
+	
+  redirect('user/login');
+}  
+
 		$this->load->view('addArticle');
  
        }
@@ -485,7 +490,12 @@ for($i=0; $i<$total; $i++) {
 	   //view articles 
 	   public function viewArticle()
 	   {
-		   
+		   	if(!isset($_SESSION['id'])){
+    # redirect to the login page
+	
+  redirect('user/login');
+}  
+
 		   $this->db->select('*');
            $query = $this->db->get('article');
 		   $resultq1= $query->result_array();
@@ -496,67 +506,36 @@ for($i=0; $i<$total; $i++) {
 			  $this->load->view('viewArticle',$data);
 		   }
 		   
+		       //view my articles 
 		   	   public function viewMyArticle() {
-		   
-$this->db->select('*');
-$this->db->where('id',$_SESSION['id']);
-$query = $this->db->get('article');
-$rowcount = $query->num_rows();
-	$i=0;
-foreach ($query->result() as $row)
-{
-	    echo "<div style='display:inline-block;margin-right:5px;'>";
-		echo "<br>";
-	    echo "<br>";
-        echo"<b>";
-
-	   echo "Article".++$i;
-    echo"</b>";
-	echo "<br>";
-	echo "<br>";
-    echo"<article>";
-	echo"Author:" . $row->Author;
-	echo"</article>";
-		echo "<br>";
-		echo $row->Title;
-		echo "<br>";
-		echo "<br>";
-		echo"<strong>";
-		echo"<i>";
-		echo $row->Body;
-		echo"</i>";
-		echo"</strong>";
-		echo "<br>";
-		
-		$article=$row->ID_article;
-$this->db->select('images');
-$this->db->from('image');
-$this->db->where('ID_article',$article);
-$query = $this->db->get();
-$rowcount = $query->num_rows();
-
-foreach ($query->result() as $row)
-{
-
-	$image_properties = array(
-        'src'   => 'uploads/'.$row->images.'',
-        'width' => '200',
-        'height'=> '200',
-        'title' => 'That was quite a night',
-        'rel'   => 'lightbox'
-);
-    echo "<div style='display:inline-block;margin-right:5px;'>";
-	echo img($image_properties);      
-}	
- echo'  </div>';
-         
-}
-		
+	  	if(!isset($_SESSION['id'])){
+    # redirect to the login page
+	
+  redirect('user/login');
+}  
 
 		   
+		   $this->db->select('*');
+		   $this->db->where('id',$_SESSION['id']);
+           $query = $this->db->get('article');
+		   $resultq1= $query->result_array();
+           $rowcount = $query->num_rows();
+           $data['articleNum']=  $rowcount;
+           $data['resultq1'] = $resultq1;	
+       
+			  $this->load->view('viewArticle',$data);
 		   }
 		   
-		  public function deleteMyArticle() { 
+		   
+		   //the view page og delete article
+		  public function deleteMyArticle()
+		  { 
+		  	if(!isset($_SESSION['id']))
+			{
+    # redirect to the login page
+	
+             redirect('user/login');
+             }  
 		   $this->db->select('*');
            $this->db->where('id',$_SESSION['id']);
            $query = $this->db->get('article');
@@ -567,8 +546,36 @@ foreach ($query->result() as $row)
 
 	
 		  $this->load->view('deleteMyArticle',$data);
-
-		   
+		  }
+		  //perform delete article
 		  
-}
+		  
+		  
+		  public function deleteArticle() { 
+		  	if(!isset($_SESSION['id']))
+			{
+    # redirect to the login page
+	
+             redirect('user/login');
+             } 
+            $article_id= $this->input->post('id');
+		    $this->db->where('ID_article',$article_id);
+			  $this->db->delete('image');
+		   $this->db->where('id',$_SESSION['id']);
+		   $this->db->where('ID_article',$article_id);
+            $this->db->delete('article');
+		    $this->db->select('*');
+           $this->db->where('id',$_SESSION['id']);
+           $query = $this->db->get('article');
+           $rowcount = $query->num_rows();
+           $resultq1= $query->result_array();
+		   $data['num']=  $rowcount;
+           $data['resultq1'] = $resultq1;	
+		  $this->load->view('deleteMyArticle',$data);
+		  }
+		  
+	     	
+		   
+	  
+	  
 }
