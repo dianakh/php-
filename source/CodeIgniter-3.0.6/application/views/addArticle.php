@@ -26,14 +26,7 @@
             <div class="collapse navbar-collapse" id="collapse">
                 <ul class="nav navbar-nav">
 				       <li ><a href="<?php echo site_url('user/home') ;?>">Home</a></li>
-                                <li class=" dropdown"><a href="#" class="dropdown-" data-toggle="dropdown" role="button" aria-expanded="false" >Your account <span class="caret"></span> </a>
-                       <ul class="dropdown-menu" role="menu" >
-            <li><a href="<?php echo site_url('user/profile') ;?>">view profile</a></li>
-            <li><a href="<?php echo site_url('user/logout') ;?>"  >sign out</a></li>
-      
-		      <li><a href="<?php echo site_url('user/update') ;?>" >update profile</a></li>
-          </ul>        
-                    </li>
+                      <li ><a href="<?php echo site_url('user/viewArticle') ;?>">View Article</a></li>
 
                      
                 </ul> 
@@ -63,15 +56,11 @@
 				<input name="upload[]" type="file" multiple="multiple" size='20' />
 				  </div>
         <?php echo form_submit('submit', 'Add Article'); ?>
-		
         <?php echo validation_errors('<p class="error">' );?>
 		</div>
 		</div>
                 <?php echo form_close(); ?>
 			
                 <?php echo $this->session->flashdata('msg'); ?>
-           
-
-
 </body>
 </html>

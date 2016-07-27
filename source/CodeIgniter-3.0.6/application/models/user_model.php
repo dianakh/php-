@@ -67,6 +67,8 @@ if($rowcount){
         return $this->db->insert('article', $data);
     }
 	
+	
+	
 }
 
 ?>

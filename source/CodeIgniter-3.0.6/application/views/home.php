@@ -68,13 +68,15 @@
                        <ul class="dropdown-menu color:#EFE9E9; " >
             <li><a href="#" id="one" >Architecture Engineers</a></li>
             <li><a href="# "id="two" >Interior Engineers</a></li>
+		
           
 		   
           </ul>   
                    <li ><a href="<?php echo site_url('user/addArticle') ;?>">Add Article</a></li>		  
                     </li>
 					           
-                    </li>
+                    <li ><a href="<?php echo site_url('user/viewArticle') ;?>">View Article</a></li>
+					 <li ><a href="<?php echo site_url('user/viewMyArticle') ;?>">View My Article</a></li>
                 
                    
                     

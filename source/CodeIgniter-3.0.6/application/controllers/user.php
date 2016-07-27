@@ -14,6 +14,7 @@ class user extends CI_Controller
 	$this->load->library('javascript'); // to load JavaScript library
 $this->load->library('javascript/jquery');
         $this->load->model('user_model');
+		$this->load->helper('html');
 	
     }
     
@@ -410,7 +411,7 @@ if (!empty($_FILES['file']['name'])) {
 	   	
         //set validation rules
         $this->form_validation->set_rules('title', 'Title', 'trim|required|min_length[6]|max_length[15]|xss_clean');
-        $this->form_validation->set_rules('content', 'Content', 'trim|required|min_length[10]|max_length[200]');
+        $this->form_validation->set_rules('content', 'Content', 'trim|required|min_length[10]');
 		 $this->form_validation->set_rules('author', 'Author', 'trim|required|min_length[3]');
 		
         //validate form input
@@ -424,6 +425,28 @@ if (!empty($_FILES['file']['name'])) {
     
     else{
 		  
+		  $data = array(
+			'Title'=> $this->input->post('title'),
+			'Body'=> $this->input->post('content'),
+			'Author'=> $this->input->post('author'),
+			'id'=>$_SESSION['id']
+				
+			
+            );
+            
+            // insert form data into database
+            if ($this->user_model->insertArticle($data))
+            {
+
+		$this->db->select('ID_article');
+$this->db->from('article');
+$this->db->where('id', $_SESSION['id']);
+$query = $this->db->get();
+foreach ($query->result() as $row)
+{
+        $article_id= $row->ID_article;
+}
+			
    extract($_POST);
     $error=array();
     $extension=array("jpeg","jpg","png","gif");
@@ -445,38 +468,107 @@ for($i=0; $i<$total; $i++) {
 	
 	 $data = array(
                 'images' => $_FILES['upload']['name'][$i],
-	'id' =>$_SESSION['id']
+	'ID_article' =>$article_id
 	);
-			
 		 $this->db->insert('image', $data);
 			  
-    
+    }
+	
 
     }
-  
+  redirect('user/viewArticle');
 }
-            $data = array(
-			'Title'=> $this->input->post('title'),
-			'Body'=> $this->input->post('content'),
-			'Author'=> $this->input->post('author'),
-			'id'=>$_SESSION['id']
-				
-			
-            );
-            
-            // insert form data into database
-            if ($this->user_model->insertArticle($data))
-            {
-
-
-	   $this->load->view('home');
-			}
-		
-		
 	   
 	   }
-	   }
+	     }
 	   
-	   //view articles in home page
-	   public function viewArticle() { }
+	   //view articles 
+	   public function viewArticle()
+	   {
+		   
+		   $this->db->select('*');
+           $query = $this->db->get('article');
+		   $resultq1= $query->result_array();
+           $rowcount = $query->num_rows();
+           $data['articleNum']=  $rowcount;
+           $data['resultq1'] = $resultq1;	
+       
+			  $this->load->view('viewArticle',$data);
+		   }
+		   
+		   	   public function viewMyArticle() {
+		   
+$this->db->select('*');
+$this->db->where('id',$_SESSION['id']);
+$query = $this->db->get('article');
+$rowcount = $query->num_rows();
+	$i=0;
+foreach ($query->result() as $row)
+{
+	    echo "<div style='display:inline-block;margin-right:5px;'>";
+		echo "<br>";
+	    echo "<br>";
+        echo"<b>";
+
+	   echo "Article".++$i;
+    echo"</b>";
+	echo "<br>";
+	echo "<br>";
+    echo"<article>";
+	echo"Author:" . $row->Author;
+	echo"</article>";
+		echo "<br>";
+		echo $row->Title;
+		echo "<br>";
+		echo "<br>";
+		echo"<strong>";
+		echo"<i>";
+		echo $row->Body;
+		echo"</i>";
+		echo"</strong>";
+		echo "<br>";
+		
+		$article=$row->ID_article;
+$this->db->select('images');
+$this->db->from('image');
+$this->db->where('ID_article',$article);
+$query = $this->db->get();
+$rowcount = $query->num_rows();
+
+foreach ($query->result() as $row)
+{
+
+	$image_properties = array(
+        'src'   => 'uploads/'.$row->images.'',
+        'width' => '200',
+        'height'=> '200',
+        'title' => 'That was quite a night',
+        'rel'   => 'lightbox'
+);
+    echo "<div style='display:inline-block;margin-right:5px;'>";
+	echo img($image_properties);      
+}	
+ echo'  </div>';
+         
+}
+		
+
+		   
+		   }
+		   
+		  public function deleteMyArticle() { 
+		   $this->db->select('*');
+           $this->db->where('id',$_SESSION['id']);
+           $query = $this->db->get('article');
+           $rowcount = $query->num_rows();
+           $resultq1= $query->result_array();
+		   $data['num']=  $rowcount;
+           $data['resultq1'] = $resultq1;	
+
+	
+		  $this->load->view('deleteMyArticle',$data);
+
+		   
+		  
+}
 }
