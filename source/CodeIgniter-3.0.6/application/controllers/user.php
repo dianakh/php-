@@ -6,6 +6,7 @@ class user extends CI_Controller
 		
         parent::__construct();
        $this->load->helper(array('form','url'));
+	   $this->load->helper('file');
 		$autoload['helper'] = array('url');
         $this->load->library(array('session', 'form_validation', 'email'));
         $this->load->database();
@@ -400,19 +401,22 @@ if (!empty($_FILES['file']['name'])) {
               }
 	      }
 		  
-		public function addArticle() { 
+		public function addArticle() 
+		{ 
 
-			if(!isset($_SESSION['id'])){
+			if(!isset($_SESSION['id']))
+			{
     # redirect to the login page
 	
-  redirect('user/login');
-}  
+            redirect('user/login');
+            }  
 
 		$this->load->view('addArticle');
  
        }
 	   
-	   public function addArticle_DB() { 
+	   public function addArticle_DB()
+	   { 
 	   	
         //set validation rules
         $this->form_validation->set_rules('title', 'Title', 'trim|required|min_length[6]|max_length[15]|xss_clean');
@@ -428,7 +432,7 @@ if (!empty($_FILES['file']['name'])) {
         }
     	
     
-    else{
+          else{
 		  
 		  $data = array(
 			'Title'=> $this->input->post('title'),
@@ -444,57 +448,63 @@ if (!empty($_FILES['file']['name'])) {
             {
 
 		$this->db->select('ID_article');
-$this->db->from('article');
-$this->db->where('id', $_SESSION['id']);
-$query = $this->db->get();
-foreach ($query->result() as $row)
-{
+        $this->db->from('article');
+         $this->db->where('id', $_SESSION['id']);
+        $query = $this->db->get();
+        foreach ($query->result() as $row)
+         {
         $article_id= $row->ID_article;
-}
-			
-   extract($_POST);
-    $error=array();
-    $extension=array("jpeg","jpg","png","gif");
-	$total = count($_FILES['upload']['name']);
-
-  // Count # of uploaded files in array
-// Loop through each file
-for($i=0; $i<$total; $i++) {
-  //Get the temp file path
-  $tmpFilePath = $_FILES['upload']['tmp_name'][$i];
-
-  //Make sure we have a filepath
-  
-    //Setup our new file path
-    $newFilePath = './uploads/'. $_FILES['upload']['name'][$i];
-
-    //Upload the file into the temp dir
-    if(move_uploaded_file($tmpFilePath, $newFilePath)) {
+         }
+		   $files = $_FILES;
+       $cpt = count($_FILES['upload']['name']);
+	    for($i=0; $i<$cpt; $i++){
+			  $_FILES['upload']['name']= $files['upload']['name'][$i];
+                $_FILES['upload']['type']= $files['upload']['type'][$i];
+                $_FILES['upload']['tmp_name']= $files['upload']['tmp_name'][$i];
+                 $_FILES['upload']['error']= $files['upload']['error'][$i];
+                 $_FILES['upload']['size']= $files['upload']['size'][$i];
 	
-	 $data = array(
-                'images' => $_FILES['upload']['name'][$i],
-	'ID_article' =>$article_id
-	);
+ $config['upload_path']='./uploads/';
+		 $config['allowed_types']='gif|jpg|png';
+		 $config['max_size']=500000;
+		 $config['encrypt_name']=FALSE;
+		 $this->load->library('upload',$config);
+		 $this->upload->initialize($config);
+		 $this->upload->do_upload('upload');
+		  $filename = $_FILES['upload']['name'];
+		$images[] = $filename;
+		
+
+
+		
+	      $data = array(
+                'images' => $_FILES['upload']['name'],
+	             'ID_article' =>$article_id
+	                    );
 		 $this->db->insert('image', $data);
 			  
-    }
-	
-
-    }
-  redirect('user/viewArticle');
-}
+               
+            }
+            redirect('user/viewArticle');
+			
+          }
 	   
 	   }
-	     }
+	 }
+	 
+	 
+
+	 
+	 
 	   
 	   //view articles 
 	   public function viewArticle()
 	   {
-		   	if(!isset($_SESSION['id'])){
-    # redirect to the login page
-	
-  redirect('user/login');
-}  
+		  if(!isset($_SESSION['id']))
+		  {
+    # redirect to the login page	
+    redirect('user/login');
+          }  
 
 		   $this->db->select('*');
            $query = $this->db->get('article');
@@ -507,14 +517,14 @@ for($i=0; $i<$total; $i++) {
 		   }
 		   
 		       //view my articles 
-		   	   public function viewMyArticle() {
-	  	if(!isset($_SESSION['id'])){
-    # redirect to the login page
+		   	   public function viewMyArticle()
+			   {
+	  	      if(!isset($_SESSION['id']))
+			  {
+              # redirect to the login page
 	
-  redirect('user/login');
-}  
-
-		   
+              redirect('user/login');
+               } 
 		   $this->db->select('*');
 		   $this->db->where('id',$_SESSION['id']);
            $query = $this->db->get('article');
@@ -532,7 +542,7 @@ for($i=0; $i<$total; $i++) {
 		  { 
 		  	if(!isset($_SESSION['id']))
 			{
-    # redirect to the login page
+             # redirect to the login page
 	
              redirect('user/login');
              }  
@@ -554,17 +564,17 @@ for($i=0; $i<$total; $i++) {
 		  public function deleteArticle() { 
 		  	if(!isset($_SESSION['id']))
 			{
-    # redirect to the login page
+            # redirect to the login page
 	
              redirect('user/login');
              } 
             $article_id= $this->input->post('id');
 		    $this->db->where('ID_article',$article_id);
-			  $this->db->delete('image');
+			$this->db->delete('image');
 		   $this->db->where('id',$_SESSION['id']);
 		   $this->db->where('ID_article',$article_id);
-            $this->db->delete('article');
-		    $this->db->select('*');
+           $this->db->delete('article');
+		   $this->db->select('*');
            $this->db->where('id',$_SESSION['id']);
            $query = $this->db->get('article');
            $rowcount = $query->num_rows();
@@ -574,8 +584,131 @@ for($i=0; $i<$total; $i++) {
 		  $this->load->view('deleteMyArticle',$data);
 		  }
 		  
-	     	
-		   
-	  
-	  
+	      public function updateMyArticle()
+		  { 
+		  	if(!isset($_SESSION['id']))
+			{
+    # redirect to the login page
+	
+             redirect('user/login');
+             }  
+		
+		   $this->db->select('*');
+           $this->db->where('id',$_SESSION['id']);
+           $query = $this->db->get('article');
+           $rowcount = $query->num_rows();
+           $resultq1= $query->result_array();
+		   $data['num']=  $rowcount;
+           $data['resultq1'] = $resultq1;	
+
+	
+		  $this->load->view('updateMyArticle',$data);
+		  }
+		
+		  
+		  
+	     	  public function updateArticle($id) 
+			  { 
+		  	if(!isset($_SESSION['id']))
+			{
+            # redirect to the login page
+	
+             redirect('user/login');
+             } 
+        
+		    $this->db->where('ID_article',$id);
+		   $this->db->select('*');
+           $this->db->where('id',$_SESSION['id']);
+           $query = $this->db->get('article');
+           $rowcount = $query->num_rows();
+           $resultq1= $query->result_array();
+		   $data['num']=  $rowcount;
+           $data['resultq1'] = $resultq1;	
+		  $this->load->view('updateArticle',$data);
+		     
+			 
+			  }
+			 public function performUpdate_Article($id)
+			 {
+				 
+			if(!isset($_SESSION['id']))
+			{
+            # redirect to the login page
+	
+             redirect('user/login');
+             }
+            if(!is_null($this->input->post('update_content')))
+            {
+          if($this->input->post('Author')!="")
+        {
+          $data = array(
+               'Author' => $this->input->post('Author')
+             
+              
+            );
+            $this->db->where('ID_article', $id);
+                    $this->db->update('article' ,$data);
+        }
+        
+          if($this->input->post('content')!="")
+        {
+          $data = array(
+       
+               'Body' => $this->input->post('content')
+              
+            );
+            $this->db->where('ID_article', $id);
+                    $this->db->update('article' ,$data);
+        }
+
+             redirect('user/viewMyArticle');
+
+}	
+}	
+   public function performUpdate_Image($image_id)
+       {
+         
+      if(!isset($_SESSION['id']))
+      {
+            # redirect to the login page
+  
+             redirect('user/login');
+             }
+if (!empty($_FILES['file']['name'])) {
+
+      $config['upload_path'] = './uploads/';
+    $config['allowed_types'] = 'gif|jpg|png';
+    $config['max_size'] = '10000';
+    $config['max_width']  = '1024';
+    $config['max_height']  = '768';
+
+    $this->load->library('upload', $config); 
+        $this->upload->initialize($config);
+    if ( ! $this->upload->do_upload('file'))
+    {
+        // error
+      
+               $imageError="your photo cant be uploaded";
+    }
+    else
+    {
+      $data =$this->upload->data();
+    
+        $image = $data['file_name'];
+        $new = array('images' => $image);
+        $this->db->where('id_image', $image_id);
+        $this->db->update('image', $new);
+    $imageError="image updated successfully";
+    }
 }
+    
+			 }
+      }
+		
+			   
+			 
+				 
+			 
+		   
+			  
+	  

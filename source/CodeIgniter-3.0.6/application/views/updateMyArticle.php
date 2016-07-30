@@ -49,24 +49,22 @@
 
  </nav>
  </div>
+ <?php
+ $attributes = array("class" => "form-horizontal", "id" => "form", "name" => "form");
+          echo form_open("user/updateArticle", $attributes);?>
     <div class="container">
     <div class="row">
 		 
   <?php foreach($resultq1 as $row):?>
   
-     
-	  <div>
-<h4 id="d1">Author:
-<input type="text"  id="duser" name="Author" value="<?php echo $row['Author'];?> "  >
-</h4>
-</div>
+      <h4>Author: <?php echo $row['Author'];?> </h4>
 	  <h4> <?php echo $row['Title'];?> </h4>	
 	<?php    
 	
-		$article=$row['ID_article'];
+		$articleId=$row['ID_article'];
         $this->db->select('images');
         $this->db->from('image');
-        $this->db->where('ID_article',$article);
+        $this->db->where('ID_article',$articleId);
         $queryImage = $this->db->get();
 		foreach($queryImage->result() as $row2):?>
         
@@ -75,14 +73,16 @@
 		  endforeach;
 		 
 		 ?>
-	 <h4><?php echo $row['Body']; ?> </h4>
-	  
-		<br><br>
+		 <div>
+		<a href="http://localhost/CodeIgniter-3.0.6/index.php/user/updateArticle/<?= $articleId?>">Update</a>
 		
-		<pre></pre>
+		  </div>
+	 <pre></pre>
+		
 	  	   </div>
 					  
                    
  <?php endforeach;?>
+  <?php echo form_close(); ?>
     </body>
 </html>

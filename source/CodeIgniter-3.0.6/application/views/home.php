@@ -76,6 +76,7 @@
                     <li ><a href="<?php echo site_url('user/viewArticle') ;?>">View Article</a></li>
 					 <li ><a href="<?php echo site_url('user/viewMyArticle') ;?>">View My Article</a></li>
                  <li ><a href="<?php echo site_url('user/deleteMyArticle') ;?>">Delete My Article</a></li>
+				 <li ><a href="<?php echo site_url('user/updateMyArticle') ;?>">Update My Article</a></li>
                    
                          </ul>  
                          </li>	 

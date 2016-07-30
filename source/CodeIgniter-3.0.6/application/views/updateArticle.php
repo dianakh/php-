@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+ 
 	<style>
 
 	</style>
@@ -49,40 +50,70 @@
 
  </nav>
  </div>
- <?php
- $attributes = array("class" => "form-horizontal", "id" => "loginform", "name" => "loginform");
-          echo form_open("user/updateArticle", $attributes);?>
-    <div class="container">
-    <div class="row">
-		 
-  <?php foreach($resultq1 as $row):?>
-  
-      <h4>Author: <?php echo $row['Author'];?> </h4>
-	  <h4> <?php echo $row['Title'];?> </h4>	
-	<?php    
-	
-		$article=$row['ID_article'];
-        $this->db->select('images');
+
+<div class="container"> 
+ 
+      <div class="row">
+   <?php foreach($resultq1 as $row):?>
+
+     <?php
+      $articleId=$row['ID_article'];
+       $this->db->select('id_image');
         $this->db->from('image');
-        $this->db->where('ID_article',$article);
+        $this->db->where('ID_article',$articleId);
         $queryImage = $this->db->get();
-		foreach($queryImage->result() as $row2):?>
+       $attributes = array("class" => "form-horizontal", "id" => "updateform", "name" => "form");
+          echo form_open('user/performUpdate_Article/'.$articleId, $attributes)  ?>
+
+
+	  <div>
+      <h4>Author:
+      <input type="text"  name="Author" value="<?php echo $row['Author'];?> "  > 
+      </h4>
+      </div>
+
+        <h4>Content:</h4> 
         
-	  <img class="img-circle" src="<?php echo base_url('uploads/'.$row2->images.''); ?>"" alt="" height="100" width="100" /> 
+        <?php echo form_textarea('content', set_value('content', $row['Body'])); ?><br />
+        
+         
+
+	       <button type="submit" name="update_content" value="<?php echo $articleId ;?>">Update</button>
+            <?php endforeach;?>
+               <?php echo form_close(); ?>
+            <br>
+               <br>
+                  <br>
+	  <?php    
+	       
+        $this->db->select('images,id_image');
+        $this->db->from('image');
+        $this->db->where('ID_article',$articleId);
+        $queryImage = $this->db->get();
+		foreach($queryImage->result() as $row2):
+$id_image=$row2->id_image;
+ ?>
+      
+        <div class="row">
+          <div class="form-group col-lg-9">
+
+          <?php
+            echo form_open_multipart('user/performUpdate_Image/'.$id_image, $attributes) ?>
+
+     
+	  <img class="img-circle" name="picture" src="<?php echo base_url('uploads/'.$row2->images.''); ?>"" alt="" height="100" width="100" />
+          <input type="file" name="file" id="file" />
+            <button type="submit" name="update_image" value="<?php echo $row2->id_image ;?>">Update</button>
+  
+	 </div>
+   </div>
+   <?php echo form_close(); ?>
 		 <?php 
+		
 		  endforeach;
 		 
 		 ?>
-		 <div>
-		<a href="http://localhost/CodeIgniter-3.0.6/index.php/user/updateArticle/<?= $article?>">Update</a>
-		
-		  </div>
-	 <pre></pre>
-		
-	  	   </div>
-					  
-                   
- <?php endforeach;?>
-  <?php echo form_close(); ?>
+		 
+	
     </body>
 </html>

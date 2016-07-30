@@ -76,6 +76,7 @@
 		 <div>
 		 <button type="submit" name="id" value="<?php echo $article ;?>">Delete</button>
 		
+		
 		  </div>
 	 <pre></pre>
 		
